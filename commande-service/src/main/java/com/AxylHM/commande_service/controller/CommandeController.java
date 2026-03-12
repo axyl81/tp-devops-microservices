@@ -1,30 +1,28 @@
-
 package com.AxylHM.commande_service.controller;
 
-import com.AxylHM.catalogue_service.dto.ProduitRequest;
-import com.AxylHM.catalogue_service.dto.ProduitResponse;
-import com.AxylHM.catalogue_service.service.ProduitService;
-import jakarta.validation.Valid;
+import jakarta.validation.Valid; // Pour la validation
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+// On importe les classes qui DOIVENT être dans le projet commande-service
+// Si elles n'existent pas encore, il faudra les créer (voir étape suivante)
+import com.AxylHM.commande_service.dto.CommandeRequest;
+import com.AxylHM.commande_service.dto.CommandeResponse;
+import com.AxylHM.commande_service.service.CommandeService;
 
 @RestController
 @RequestMapping("/api/v1/commandes")
 @RequiredArgsConstructor
 public class CommandeController {
 
-    // Note : Assure-toi d'avoir créé CommandeService et les DTOs (Request/Response)
     private final CommandeService commandeService;
 
     @PostMapping
-    public ResponseEntity<CommandeResponse> creerCommande(@RequestBody CommandeRequest request) {
+    public ResponseEntity<CommandeResponse> creerCommande(@Valid @RequestBody CommandeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commandeService.creerCommande(request));
     }
 
