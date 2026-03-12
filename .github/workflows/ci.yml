@@ -1,0 +1,38 @@
+name: Microservices CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # On a changé 21 par 17 ici
+
+      # On adapte les commandes aux noms de tes dossiers
+      - name: Build Config Service
+        run: cd config-service && mvn clean install
+
+      - name: Build Discovery Service
+        run: cd discovery-service && mvn clean install
+
+      - name: Build Catalogue Service
+        run: cd catalogue-service && mvn clean install
+
+      - name: Build Commande Service
+        run: cd commande-service && mvn clean install
+
+      - name: Build Paiement Service
+        run: cd paiement-service && mvn clean install
+
+      - name: Build Gateway Service
+        run: cd gateway-service && mvn clean install
