@@ -12,5 +12,9 @@ class CatalogueServiceApplicationTests {
 	@Test
 	void contextLoads() {
 	}
+	@Test
+	void contextLoads() {
+		throw new RuntimeException("Bug volontaire pour le TP !");
+	}
 
 }
