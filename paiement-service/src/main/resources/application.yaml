@@ -1,0 +1,38 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: paiement-service
+
+  config:
+    import: "optional:configserver:http://config-service:8888"
+
+  datasource:
+    # --- CONFIGURATION POSTGRESQL (ACTIVE) ---
+    url: jdbc:postgresql://postgres-service-paiement:5432/service2db
+    username: service1user
+    password: service1pass
+    driver-class-name: org.postgresql.Driver
+
+    # --- ANCIENNE CONFIGURATION H2 (COMMENTÉE) ---
+    # url: jdbc:h2:mem:paiementdb
+    # driverClassName: org.h2.Driver
+    # username: sa
+    # password: ""
+
+  jpa:
+    # Dialecte pour PostgreSQL (Actif)
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    # Dialecte pour H2 (Commenté)
+    # database-platform: org.hibernate.dialect.H2Dialect
+
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+# --- CONSOLE H2 (DÉSACTIVÉE) ---
+# h2:
+#   console:
+#     enabled: true

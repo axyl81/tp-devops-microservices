@@ -1,0 +1,162 @@
+version: '3.8'
+
+services:
+  discovery-service:
+    build: ./discovery-service
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    networks:
+      - tp-network
+
+  config-service:
+    build: ./config-service
+    container_name: config-service
+    ports:
+      - "8888:8888"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+    depends_on:
+      - discovery-service
+    networks:
+      - tp-network
+
+  # --- BASES DE DONNÉES ---
+
+  postgres-catalogue:
+    image: postgres:15-alpine
+    container_name: postgres-catalogue
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=cataloguedb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d cataloguedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tp-network
+
+  postgres-commande:
+    image: postgres:15-alpine
+    container_name: postgres-commande
+    ports:
+      - "5433:5432" # Port 5433 sur ton PC -> 5432 dans Docker
+    environment:
+      - POSTGRES_DB=commandedb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d commandedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tp-network
+
+  postgres-paiement:
+    image: postgres:15-alpine
+    container_name: postgres-paiement
+    ports:
+      - "5434:5432" # Port 5434 sur ton PC -> 5432 dans Docker
+    environment:
+      - POSTGRES_DB=paiementdb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d paiementdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tp-network
+
+  # --- MICROSERVICES ---
+
+  catalogue-service:
+    build: ./catalogue-service
+    container_name: catalogue-service
+    ports:
+      - "8081:8081"
+    environment:
+      - spring.profiles.active=docker
+      - spring.cloud.config.uri=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+      - spring.datasource.url=jdbc:postgresql://postgres-catalogue:5432/cataloguedb
+      - spring.datasource.username=admin
+      - spring.datasource.password=admin
+      - spring.datasource.driver-class-name=org.postgresql.Driver
+      - spring.jpa.hibernate.ddl-auto=update
+    depends_on:
+      postgres-catalogue:
+        condition: service_healthy
+      config-service:
+        condition: service_started
+    networks:
+      - tp-network
+
+  commande-service:
+    build: ./commande-service
+    container_name: commande-service
+    ports:
+      - "8082:8082"
+    environment:
+      - spring.profiles.active=docker
+      - spring.cloud.config.uri=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+      - spring.datasource.url=jdbc:postgresql://postgres-commande:5432/commandedb
+      - spring.datasource.username=admin
+      - spring.datasource.password=admin
+      - spring.datasource.driver-class-name=org.postgresql.Driver
+      - spring.jpa.hibernate.ddl-auto=update
+    depends_on:
+      postgres-commande:
+        condition: service_healthy
+      config-service:
+        condition: service_started
+    networks:
+      - tp-network
+
+  paiement-service:
+    build: ./paiement-service
+    container_name: paiement-service
+    ports:
+      - "8083:8083"
+    environment:
+      - spring.profiles.active=docker
+      - spring.cloud.config.uri=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+      - spring.datasource.url=jdbc:postgresql://postgres-paiement:5432/paiementdb
+      - spring.datasource.username=admin
+      - spring.datasource.password=admin
+      - spring.datasource.driver-class-name=org.postgresql.Driver
+      - spring.jpa.hibernate.ddl-auto=update
+    depends_on:
+      postgres-paiement:
+        condition: service_healthy
+      config-service:
+        condition: service_started
+    networks:
+      - tp-network
+
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "8084:8084"
+    environment:
+      - spring.profiles.active=docker
+      - spring.cloud.config.uri=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+    depends_on:
+      - config-service
+      - discovery-service
+    networks:
+      - tp-network
+
+networks:
+  tp-network:
+    driver: bridge

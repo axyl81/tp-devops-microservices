@@ -1,0 +1,10 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+
+  # On dit au serveur de lire les configurations localement
+  profiles:
+    active: native

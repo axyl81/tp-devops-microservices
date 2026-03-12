@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: catalogue-service
+
+  config:
+    import: "optional:configserver:http://config-service:8888"
+
+  datasource:
+    # On remplace H2 par PostgreSQL
+    # 'postgres-service' est le nom DNS interne au cluster Kubernetes
+    url: jdbc:postgresql://postgres-service:5432/service1db
+    username: service1user
+    password: service1pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    # On change le dialecte pour PostgreSQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# On peut supprimer ou désactiver la console H2 car elle ne servira plus

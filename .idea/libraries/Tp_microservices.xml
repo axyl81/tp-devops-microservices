@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Tp microservices">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/catalogue-service.zip!/" />
+      <root url="jar://$PROJECT_DIR$/config-service.zip!/" />
+      <root url="jar://$PROJECT_DIR$/discovery-service.zip!/" />
+      <root url="jar://$PROJECT_DIR$/gateway-service.zip!/" />
+      <root url="jar://$PROJECT_DIR$/paiement-service.zip!/" />
+      <root url="jar://$PROJECT_DIR$/commande-service.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
