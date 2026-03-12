@@ -16,23 +16,40 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17' # On a changé 21 par 17 ici
+          java-version: '17'
 
-      # On adapte les commandes aux noms de tes dossiers
+      # --- CONFIG SERVICE ---
       - name: Build Config Service
         run: cd config-service && mvn clean install
+      - name: Docker Build Config Service
+        run: cd config-service && docker build -t config-service:latest .
 
+      # --- DISCOVERY SERVICE ---
       - name: Build Discovery Service
         run: cd discovery-service && mvn clean install
+      - name: Docker Build Discovery Service
+        run: cd discovery-service && docker build -t discovery-service:latest .
 
+      # --- CATALOGUE SERVICE ---
       - name: Build Catalogue Service
         run: cd catalogue-service && mvn clean install
+      - name: Docker Build Catalogue Service
+        run: cd catalogue-service && docker build -t catalogue-service:latest .
 
+      # --- COMMANDE SERVICE ---
       - name: Build Commande Service
         run: cd commande-service && mvn clean install
+      - name: Docker Build Commande Service
+        run: cd commande-service && docker build -t commande-service:latest .
 
+      # --- PAIEMENT SERVICE ---
       - name: Build Paiement Service
         run: cd paiement-service && mvn clean install
+      - name: Docker Build Paiement Service
+        run: cd paiement-service && docker build -t paiement-service:latest .
 
+      # --- GATEWAY SERVICE ---
       - name: Build Gateway Service
         run: cd gateway-service && mvn clean install
+      - name: Docker Build Gateway Service
+        run: cd gateway-service && docker build -t gateway-service:latest .
