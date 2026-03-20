@@ -1,0 +1,70 @@
+name: Deploy Microservices on Kubernetes with Helm
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  helm-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1 Checkout du code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2 Setup Java
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3 Build microservices
+      - name: Build Microservices
+        run: mvn clean package -DskipTests
+
+      # 4 Build Docker images
+      - name: Build Docker Images
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/config-service:latest ./config-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/discovery-service:latest ./discovery-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway-service:latest ./gateway-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/catalogue-service:latest ./catalogue-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/commande-service:latest ./commande-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/paiement-service:latest ./paiement-service
+
+      # Login Docker Hub
+      - name: Docker Hub Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 5 Push Docker images
+      - name: Push Docker Images
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/config-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/discovery-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/gateway-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/catalogue-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/commande-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/paiement-service:latest
+
+      # 6 Setup Helm
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+
+      # 7 Deploy services with Helm
+      - name: Deploy Config Service
+        run: helm upgrade --install config-service ./charts/config-service
+      - name: Deploy Discovery Service
+        run: helm upgrade --install discovery-service ./charts/discovery-service
+      - name: Deploy Gateway Service
+        run: helm upgrade --install gateway-service ./charts/gateway-service
+      - name: Deploy Catalogue Service
+        run: helm upgrade --install catalogue-service ./charts/catalogue-service
+      - name: Deploy Commande Service
+        run: helm upgrade --install commande-service ./charts/commande-service
+      - name: Deploy Paiement Service
+        run: helm upgrade --install paiement-service ./charts/paiement-service
