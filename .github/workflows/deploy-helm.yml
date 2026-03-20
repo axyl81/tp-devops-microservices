@@ -20,9 +20,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3 Build microservices
+      # 3 Build microservices (Correction : on précise le chemin de chaque pom.xml)
       - name: Build Microservices
-        run: mvn clean package -DskipTests
+        run: |
+          mvn clean package  -f config-service/pom.xml
+          mvn clean package  -f discovery-service/pom.xml
+          mvn clean package  -f gateway-service/pom.xml
+          mvn clean package  -f catalogue-service/pom.xml
+          mvn clean package  -f commande-service/pom.xml
+          mvn clean package  -f paiement-service/pom.xml
 
       # 4 Build Docker images
       - name: Build Docker Images
