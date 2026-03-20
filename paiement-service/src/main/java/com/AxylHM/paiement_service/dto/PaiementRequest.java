@@ -1,4 +1,4 @@
-package com.AxylHM.commande_service.dto;
+package com.AxylHM.paiement_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommandeRequest {
-    private Long produitId;
-    private Integer quantite;
+public class PaiementRequest {
+    private Long commandeId;
+    private Double montant;
 }

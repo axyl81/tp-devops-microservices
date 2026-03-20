@@ -1,4 +1,4 @@
-package com.AxylHM.catalogue_service.domain;
+package com.AxylHM.commande_service.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,18 +9,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Produit {
+public class Commande {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nom;
-    private String description;
-    private Double prix;
-    private Integer stock;
+    private Long produitId;
+    private Integer quantite;
+    private LocalDateTime dateCommande;
 }

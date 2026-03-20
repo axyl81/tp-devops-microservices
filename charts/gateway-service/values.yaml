@@ -1,0 +1,7 @@
+replicaCount: 1
+image:
+  repository: gateway-service
+  tag: latest
+service:
+  type: NodePort
+  port: 8080

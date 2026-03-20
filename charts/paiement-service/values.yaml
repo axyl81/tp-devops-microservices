@@ -1,0 +1,7 @@
+replicaCount: 1
+image:
+  repository: paiement-service
+  tag: latest
+service:
+  type: ClusterIP
+  port: 8083

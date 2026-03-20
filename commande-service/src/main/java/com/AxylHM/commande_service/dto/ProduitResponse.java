@@ -1,16 +1,14 @@
 package com.AxylHM.commande_service.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommandeResponse {
+public class ProduitResponse {
     private Long id;
-    private Long produitId;
-    private Integer quantite;
+    private String nom;
+    private Double prix;
 }

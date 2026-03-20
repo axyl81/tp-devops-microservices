@@ -1,4 +1,4 @@
-package com.AxylHM.commande_service.dto;
+package com.AxylHM.paiement_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommandeResponse {
+public class PaiementResponse {
     private Long id;
-    private Long produitId;
-    private Integer quantite;
+    private Long commandeId;
+    private String statut;
 }

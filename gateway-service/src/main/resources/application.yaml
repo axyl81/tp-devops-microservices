@@ -4,26 +4,8 @@ server:
 spring:
   application:
     name: gateway-service
-  config:
-    import: "optional:configserver:http://config-service:8888" # On précise l'URL du config-server
-
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true          # Active la détection automatique des services via Eureka
-          lower-case-service-id: true # Permet d'utiliser /catalogue-service/ au lieu de /CATALOGUE-SERVICE/
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka/ # Pour que la Gateway sache où est l'annuaire
-    register-with-eureka: true
-    fetch-registry: true
-
-# Optionnel mais super utile pour le diagnostic
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "gateway,health,info"
+      defaultZone: http://discovery-service:8761/eureka/

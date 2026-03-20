@@ -1,0 +1,7 @@
+replicaCount: 1
+image:
+  repository: discovery-service
+  tag: latest
+service:
+  type: NodePort
+  port: 8761

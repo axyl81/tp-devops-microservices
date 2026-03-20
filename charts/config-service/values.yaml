@@ -1,0 +1,7 @@
+replicaCount: 1
+image:
+  repository: config-service
+  tag: latest
+service:
+  type: NodePort
+  port: 8888
